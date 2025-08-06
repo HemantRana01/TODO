@@ -1,0 +1,105 @@
+import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
+import { User } from '../users/user.model';
+import { RegisterDto, LoginDto, AuthResponseDto } from './dto/auth.dto';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
+    const { username, email, password, first_name, last_name } = registerDto;
+
+    // Check if user already exists
+    const existingUser = await User.query()
+      .where('username', username)
+      .orWhere('email', email)
+      .first();
+
+    if (existingUser) {
+      throw new ConflictException('Username or email already exists');
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const user = await User.query().insert({
+      username,
+      email,
+      hashed_password: hashedPassword,
+      first_name,
+      last_name,
+      is_active: true,
+    });
+
+    // Generate JWT token
+    const access_token = this.generateToken(user);
+
+    return {
+      access_token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      },
+    };
+  }
+
+  async login(loginDto: LoginDto): Promise<AuthResponseDto> {
+    const { username, password } = loginDto;
+
+    // Find user by username
+    const user = await User.query().where('username', username).first();
+
+    if (!user || !user.is_active) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.hashed_password);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    // Generate JWT token
+    const access_token = this.generateToken(user);
+
+    return {
+      access_token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      },
+    };
+  }
+
+  private generateToken(user: User): string {
+    const payload = {
+      sub: user.id,
+      username: user.username,
+      email: user.email,
+    };
+
+    return this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: this.configService.get('JWT_EXPIRES_IN', '24h'),
+    });
+  }
+
+  async validateUser(userId: number): Promise<User | null> {
+    const user = await User.query().findById(userId);
+    return user || null;
+  }
+} 
