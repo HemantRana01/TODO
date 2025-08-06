@@ -37,7 +37,7 @@ export class Todo extends BaseModel {
           enum: Object.values(TodoStatus),
           default: TodoStatus.PENDING 
         },
-        due_date: { type: ['string', 'null'], format: 'date' },
+        due_date: { type: ['string', 'object', 'null'], format: 'date' },
         user_id: { type: 'integer' },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' },
