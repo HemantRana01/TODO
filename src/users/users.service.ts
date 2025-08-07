@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from './user.model';
 import { UpdateUserDto, UserResponseDto, UserProfileDto } from './dto/user.dto';
 import { ChangePasswordDto } from './dto/password.dto';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/constants';
 
 @Injectable()
 export class UsersService {
@@ -27,7 +28,7 @@ export class UsersService {
       .withGraphFetched('todos');
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     return {
@@ -41,25 +42,25 @@ export class UsersService {
     };
   }
 
-  async updateProfile(userId: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+  async updateProfile(userId: number, updateUserDto: UpdateUserDto) {
     const user = await this.findById(userId);
     
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     // Check if email is being updated and if it's already taken
     if (updateUserDto.email && updateUserDto.email !== user.email) {
       const existingUser = await this.findByEmail(updateUserDto.email);
       if (existingUser) {
-        throw new ConflictException('Email already exists');
+        throw new ConflictException(ERROR_MESSAGES.EMAIL_ALREADY_USED);
       }
     }
 
     const updatedUser = await User.query()
       .patchAndFetchById(userId, updateUserDto);
 
-    return {
+    const responseData = {
       id: updatedUser.id,
       username: updatedUser.username,
       email: updatedUser.email,
@@ -67,7 +68,11 @@ export class UsersService {
       lastName: updatedUser.lastName,
       isActive: updatedUser.isActive,
       createdAt: updatedUser.createdAt,
-      updatedAt: updatedUser.updatedAt,
+      updatedAt: updatedUser.updatedAt, 
+    };
+    return {
+      data: responseData,
+      message: SUCCESS_MESSAGES.USER_UPDATED_SUCCESSFULLY,
     };
   }
 
@@ -76,19 +81,19 @@ export class UsersService {
 
     // Validate password confirmation
     if (newPassword !== confirmPassword) {
-      throw new BadRequestException('New password and confirmation password do not match');
+      throw new BadRequestException(ERROR_MESSAGES.CONFIRM_PASSWORD_DOES_NOT_MATCH);
     }
 
     // Get user with current password
     const user = await this.findById(userId);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     // Verify current password
     const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.hashedPassword);
     if (!isCurrentPasswordValid) {
-      throw new UnauthorizedException('Current password is incorrect');
+      throw new UnauthorizedException(ERROR_MESSAGES.CUURANT_PASSWORD_INCORRECT);
     }
 
     // Hash new password
@@ -103,7 +108,7 @@ export class UsersService {
     const user = await this.findById(userId);
     
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     await User.query()
@@ -114,7 +119,7 @@ export class UsersService {
     const user = await this.findById(userId);
     
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     await User.query()
@@ -132,7 +137,7 @@ export class UsersService {
       .withGraphFetched('todos');
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     const todos = user.todos || [];

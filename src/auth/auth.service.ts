@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.model';
 import { RegisterDto, LoginDto, AuthResponseDto } from './dto/auth.dto';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/constants';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +23,7 @@ export class AuthService {
       .first();
 
     if (existingUser) {
-      throw new ConflictException('Username or email already exists');
+      throw new ConflictException(ERROR_MESSAGES.ACCOUNT_ALREADY_EXISTS);
     }
 
     // Hash password
@@ -50,6 +51,7 @@ export class AuthService {
         firstName: user.firstName,
         lastName: user.lastName,
       },
+      message: SUCCESS_MESSAGES.REGISTRATION_COMPLETED,
     };
   }
 
@@ -60,14 +62,14 @@ export class AuthService {
     const user = await User.query().where('username', username).first();
 
     if (!user || !user.isActive) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(ERROR_MESSAGES.INVALID_CREDENTIALS);
     }
 
     // Verify password
     const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(ERROR_MESSAGES.INVALID_CREDENTIALS);
     }
 
     // Generate JWT token
@@ -82,6 +84,7 @@ export class AuthService {
         firstName: user.firstName,
         lastName: user.lastName,
       },
+      message: SUCCESS_MESSAGES.LOGIN_SUCCESSFUL,
     };
   }
 

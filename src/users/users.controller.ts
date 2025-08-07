@@ -81,7 +81,7 @@ export class UsersController {
   async updateProfile(
     @CurrentUser() user: JwtUser,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserResponseDto> {
+  ){
     return this.usersService.updateProfile(user.id, updateUserDto);
   }
 

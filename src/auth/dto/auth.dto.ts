@@ -49,4 +49,7 @@ export class AuthResponseDto {
     firstName?: string;
     lastName?: string;
   };
+
+  @ApiProperty({ description: 'Register Successfully', example: 3600 })
+  message: string;
 } 

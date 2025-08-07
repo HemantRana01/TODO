@@ -53,8 +53,8 @@ export class TodosController {
     status: 401, 
     description: 'Unauthorized - Invalid or missing JWT token' 
   })
-  async create(@Body() createTodoDto: CreateTodoDto, @CurrentUser() user: JwtUser): Promise<TodoResponseDto> {
-    const todo = await this.todosService.create(createTodoDto, user.id);
+  async create(@Body() createTodoDto: CreateTodoDto ){
+    const todo = await this.todosService.create(createTodoDto);
     return todo;
   }
 
@@ -203,7 +203,7 @@ export class TodosController {
     @Param('id') id: string,
     @Body() updateTodoDto: UpdateTodoDto,
     @CurrentUser() user: JwtUser,
-  ): Promise<TodoResponseDto> {
+  ){
     return this.todosService.update(+id, updateTodoDto, user.id);
   }
 

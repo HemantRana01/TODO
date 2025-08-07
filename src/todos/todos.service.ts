@@ -2,20 +2,22 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { Todo, TodoStatus } from './todo.model';
 import { CreateTodoDto, UpdateTodoDto } from './dto/todo.dto';
 import { TodoQueryDto, PaginatedTodoResponseDto } from './dto/todo-query.dto';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/constants';
+
 
 @Injectable()
 export class TodosService {
-  async create(createTodoDto: CreateTodoDto, userId: number): Promise<Todo> {
+  async create(createTodoDto: CreateTodoDto) {
     const todo = await Todo.query().insert({
       title: createTodoDto.title,
       description: createTodoDto.description,
       dueDate: createTodoDto.dueDate ? new Date(createTodoDto.dueDate) : undefined,
-      userId: userId,
       status: createTodoDto.status || TodoStatus.PENDING,
-      
     });
-
-    return todo;
+    return {
+      message: SUCCESS_MESSAGES.USER_CREATED_SUCCESSFULLY,
+      data: todo,
+    };
   }
 
   async findAll(userId: number): Promise<Todo[]> {
@@ -25,14 +27,14 @@ export class TodosService {
   }
 
   async findAllPaginated(userId: number, queryDto: TodoQueryDto): Promise<PaginatedTodoResponseDto> {
-    const { 
-      status, 
-      dueDateFrom, 
-      dueDateTo, 
-      page = 1, 
-      limit = 10, 
-      sortBy = 'createdAt', 
-      sortOrder = 'desc' 
+    const {
+      status,
+      dueDateFrom,
+      dueDateTo,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
     } = queryDto;
 
     // Build query
@@ -84,13 +86,13 @@ export class TodosService {
       .first();
 
     if (!todo) {
-      throw new NotFoundException('Todo not found');
+      throw new NotFoundException(ERROR_MESSAGES.TODO_NOT_FOUND);
     }
 
     return todo;
   }
 
-  async update(id: number, updateTodoDto: UpdateTodoDto, userId: number): Promise<Todo> {
+  async update(id: number, updateTodoDto: UpdateTodoDto, userId: number) {
     const todo = await this.findOne(id, userId);
 
     const updateData = {
@@ -101,12 +103,15 @@ export class TodosService {
     const updatedTodo = await Todo.query()
       .patchAndFetchById(id, updateData);
 
-    return updatedTodo;
+    return {
+      data: updatedTodo,
+      message: SUCCESS_MESSAGES.USER_UPDATED_SUCCESSFULLY,
+    };
   }
 
   async remove(id: number, userId: number): Promise<void> {
     const todo = await this.findOne(id, userId);
-    
+
     await Todo.query().deleteById(id);
   }
 
@@ -131,10 +136,10 @@ export class TodosService {
   async toggleStatus(id: number, userId: number): Promise<Todo> {
     const todo = await this.findOne(id, userId);
     if (!todo) {
-      throw new NotFoundException('Todo not found');
+      throw new NotFoundException(ERROR_MESSAGES.TODO_NOT_FOUND);
     }
     const newStatus = todo.status === TodoStatus.COMPLETED ? TodoStatus.PENDING : TodoStatus.COMPLETED;
     return Todo.query().patchAndFetchById(id, { status: newStatus });
   }
-  
+
 } 
