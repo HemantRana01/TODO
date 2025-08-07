@@ -39,7 +39,7 @@ export class LoginDto {
 
 export class AuthResponseDto {
   @ApiProperty({ description: 'JWT access token' })
-  access_token: string;
+  accessToken: string;
 
   @ApiProperty({ description: 'User information' })
   user: {

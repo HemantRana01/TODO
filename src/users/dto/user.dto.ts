@@ -20,7 +20,7 @@ export class UpdateUserDto {
   @ApiProperty({ example: true, description: 'User active status', required: false })
   @IsOptional()
   @IsBoolean()
-  is_active?: boolean;
+  isActive?: boolean;
 }
 
 export class UserResponseDto {
@@ -40,7 +40,7 @@ export class UserResponseDto {
   lastName?: string;
 
   @ApiProperty({ example: true, description: 'User active status' })
-  is_active: boolean;
+  isActive: boolean;
 
   @ApiProperty({ example: '2024-01-01T00:00:00Z', description: 'Created at timestamp' })
   createdAt: Date;
@@ -66,8 +66,8 @@ export class UserProfileDto {
   lastName?: string;
 
   @ApiProperty({ example: true, description: 'User active status' })
-  is_active: boolean;
+  isActive: boolean;
 
   @ApiProperty({ example: 5, description: 'Number of todos' })
-  todo_count: number;
+  todoCount: number;
 } 

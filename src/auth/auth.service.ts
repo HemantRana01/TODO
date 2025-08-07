@@ -32,17 +32,17 @@ export class AuthService {
     const user = await User.query().insert({
       username,
       email,
-      hashed_password: hashedPassword,
+      hashedPassword: hashedPassword,
       firstName: firstName, 
       lastName: lastName,
-      is_active: true,
+      isActive: true,
     });
 
     // Generate JWT token
-    const access_token = this.generateToken(user);
+    const accessToken = this.generateToken(user);
 
     return {
-      access_token,
+      accessToken,
       user: {
         id: user.id,
         username: user.username,
@@ -59,22 +59,22 @@ export class AuthService {
     // Find user by username
     const user = await User.query().where('username', username).first();
 
-    if (!user || !user.is_active) {
+    if (!user || !user.isActive) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.hashed_password);
+    const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     // Generate JWT token
-    const access_token = this.generateToken(user);
+    const accessToken = this.generateToken(user);
 
     return {
-      access_token,
+      accessToken,
       user: {
         id: user.id,
         username: user.username,

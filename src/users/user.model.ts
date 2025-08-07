@@ -4,11 +4,11 @@ import { Todo } from '../todos/todo.model';
 
 export class User extends BaseModel {
   username!: string;
-  hashed_password!: string;
+  hashedPassword!: string;
   email!: string;
   firstName?: string;
   lastName?: string;
-  is_active!: boolean;
+  isActive!: boolean;
 
   // Relationships
   todos?: Todo[];
@@ -20,16 +20,16 @@ export class User extends BaseModel {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['username', 'hashed_password', 'email'],
+      required: ['username', 'hashedPassword', 'email'],
 
       properties: {
         id: { type: 'integer' },
         username: { type: 'string', minLength: 1, maxLength: 255 },
-        hashed_password: { type: 'string', minLength: 1 },
+        hashedPassword: { type: 'string', minLength: 1 },
         email: { type: 'string', format: 'email' },
         firstName: { type: ['string', 'null'], maxLength: 255 },
         lastName: { type: ['string', 'null'], maxLength: 255 },
-        is_active: { type: 'boolean' },
+        isActive: { type: 'boolean' },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' },
       },

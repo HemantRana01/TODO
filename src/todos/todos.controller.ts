@@ -64,12 +64,12 @@ export class TodosController {
     description: 'Retrieve paginated list of todos for the authenticated user with advanced filtering options including status, due date range, and sorting.'
   })
   @ApiQuery({ name: 'status', required: false, enum: TodoStatus, description: 'Filter by todo status' })
-  @ApiQuery({ name: 'dueDate_from', required: false, type: String, description: 'Filter todos due from this date (YYYY-MM-DD)' })
-  @ApiQuery({ name: 'dueDate_to', required: false, type: String, description: 'Filter todos due until this date (YYYY-MM-DD)' })
+  @ApiQuery({ name: 'dueDateFrom', required: false, type: String, description: 'Filter todos due from this date (YYYY-MM-DD)' })
+  @ApiQuery({ name: 'dueDateTo', required: false, type: String, description: 'Filter todos due until this date (YYYY-MM-DD)' })
   @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (default: 1)' })
   @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page (default: 10, max: 100)' })
-  @ApiQuery({ name: 'sort_by', required: false, enum: ['createdAt', 'updatedAt', 'dueDate', 'title'], description: 'Sort field (default: createdAt)' })
-  @ApiQuery({ name: 'sort_order', required: false, enum: ['asc', 'desc'], description: 'Sort order (default: desc)' })
+  @ApiQuery({ name: 'sortBy', required: false, enum: ['createdAt', 'updatedAt', 'dueDate', 'title'], description: 'Sort field (default: createdAt)' })
+  @ApiQuery({ name: 'sortOrder', required: false, enum: ['asc', 'desc'], description: 'Sort order (default: desc)' })
   @ApiResponse({ 
     status: 200, 
     description: 'Paginated list of todos retrieved successfully with metadata.',

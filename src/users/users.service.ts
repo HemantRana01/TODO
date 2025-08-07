@@ -36,8 +36,8 @@ export class UsersService {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
-      is_active: user.is_active,
-      todo_count: user.todos?.length || 0,
+      isActive: user.isActive,
+      todoCount: user.todos?.length || 0,
     };
   }
 
@@ -65,17 +65,17 @@ export class UsersService {
       email: updatedUser.email,
       firstName: updatedUser.firstName,
       lastName: updatedUser.lastName,
-      is_active: updatedUser.is_active,
+      isActive: updatedUser.isActive,
       createdAt: updatedUser.createdAt,
       updatedAt: updatedUser.updatedAt,
     };
   }
 
   async changePassword(userId: number, changePasswordDto: ChangePasswordDto): Promise<void> {
-    const { current_password, new_password, confirm_password } = changePasswordDto;
+    const { currentPassword, newPassword, confirmPassword } = changePasswordDto;
 
     // Validate password confirmation
-    if (new_password !== confirm_password) {
+    if (newPassword !== confirmPassword) {
       throw new BadRequestException('New password and confirmation password do not match');
     }
 
@@ -86,17 +86,17 @@ export class UsersService {
     }
 
     // Verify current password
-    const isCurrentPasswordValid = await bcrypt.compare(current_password, user.hashed_password);
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.hashedPassword);
     if (!isCurrentPasswordValid) {
       throw new UnauthorizedException('Current password is incorrect');
     }
 
     // Hash new password
-    const hashedNewPassword = await bcrypt.hash(new_password, 10);
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
     // Update password
     await User.query()
-      .patchAndFetchById(userId, { hashed_password: hashedNewPassword });
+      .patchAndFetchById(userId, { hashedPassword: hashedNewPassword });
   }
 
   async deactivateUser(userId: number): Promise<void> {
@@ -107,7 +107,7 @@ export class UsersService {
     }
 
     await User.query()
-      .patchAndFetchById(userId, { is_active: false });
+      .patchAndFetchById(userId, { isActive: false });
   }
 
   async activateUser(userId: number): Promise<void> {
@@ -118,14 +118,14 @@ export class UsersService {
     }
 
     await User.query()
-      .patchAndFetchById(userId, { is_active: true });
+      .patchAndFetchById(userId, { isActive: true });
   }
 
   async getUserStats(userId: number): Promise<{
-    total_todos: number;
-    completed_todos: number;
-    pending_todos: number;
-    overdue_todos: number;
+    totalTodos: number;
+    completedTodos: number;
+    pendingTodos: number;
+    overdueTodos: number;
   }> {
     const user = await User.query()
       .findById(userId)
@@ -140,10 +140,10 @@ export class UsersService {
     today.setHours(0, 0, 0, 0);
 
     return {
-      total_todos: todos.length,
-      completed_todos: todos.filter(todo => todo.status === 'completed').length,
-      pending_todos: todos.filter(todo => todo.status === 'pending').length,
-      overdue_todos: todos.filter(todo => 
+      totalTodos: todos.length,
+      completedTodos: todos.filter(todo => todo.status === 'completed').length,
+      pendingTodos: todos.filter(todo => todo.status === 'pending').length,
+      overdueTodos: todos.filter(todo => 
         todo.dueDate && 
         new Date(todo.dueDate) < today && 
         todo.status !== 'completed'

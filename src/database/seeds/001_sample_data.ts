@@ -12,35 +12,35 @@ export async function seed(knex: Knex): Promise<void> {
   const users = await knex('users').insert([
     {
       username: 'john_doe',
-      hashed_password: hashedPassword,
+      hashedPassword: hashedPassword,
       email: 'john@example.com',
       firstName: 'John',
       lastName: 'Doe',
-      is_active: true,
+      isActive: true,
     },
     {
       username: 'jane_smith',
-      hashed_password: hashedPassword,
+      hashedPassword: hashedPassword,
       email: 'jane@example.com',
       firstName: 'Jane',
       lastName: 'Smith',
-      is_active: true,
+      isActive: true,
     },
     {
       username: 'john_musk',
-      hashed_password: hashedPassword,
+      hashedPassword: hashedPassword,
       email: 'musk@example.com',
       firstName: 'John',
       lastName: 'Musk',
-      is_active: true,
+      isActive: true,
     },
     {
       username: 'ted_mostby',
-      hashed_password: hashedPassword,
+      hashedPassword: hashedPassword,
       email: 'ted@example.com',
       firstName: 'ted',
       lastName: 'Mostby',
-      is_active: true,
+      isActive: true,
     },
   ]).returning('*');
 
