@@ -16,7 +16,7 @@ import { CurrentUser } from '../auth/decorators/user.decorator';
 import { TodosService } from './todos.service';
 import { CreateTodoDto, UpdateTodoDto, TodoResponseDto } from './dto/todo.dto';
 import { TodoQueryDto, PaginatedTodoResponseDto } from './dto/todo-query.dto';
-import { TodoStatus } from './todo.model';
+import { TodoStatus } from '../database/models/todo.model';
 
 interface JwtUser {
   id: number;

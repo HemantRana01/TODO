@@ -1,6 +1,6 @@
 import { Model } from 'objection';
-import { BaseModel } from '../database/base.model';
-import { User } from '../users/user.model';
+import { BaseModel } from './base.model';
+import { User } from './user.model';
 
 export enum TodoStatus {
   PENDING = 'pending',
@@ -34,8 +34,7 @@ export class Todo extends BaseModel {
         description: { type: ['string', 'null'] },
         status: { 
           type: 'string', 
-          enum: Object.values(TodoStatus),
-          default: TodoStatus.PENDING 
+          enum: Object.values(TodoStatus)
         },
         dueDate: { type: ['string', 'object', 'null'], format: 'date' },
         userId: { type: 'integer' },

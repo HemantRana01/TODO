@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { Todo, TodoStatus } from './todo.model';
+import { Todo, TodoStatus } from '../database/models/todo.model';
 import { CreateTodoDto, UpdateTodoDto } from './dto/todo.dto';
 import { TodoQueryDto, PaginatedTodoResponseDto } from './dto/todo-query.dto';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/constants';

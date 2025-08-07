@@ -1,6 +1,6 @@
 import { Model } from 'objection';
-import { BaseModel } from '../database/base.model';
-import { Todo } from '../todos/todo.model';
+import { Todo } from './todo.model';
+import { BaseModel } from './base.model';
 
 export class User extends BaseModel {
   username!: string;

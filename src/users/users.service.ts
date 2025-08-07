@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { User } from './user.model';
+import { User } from '../database/models/user.model';
 import { UpdateUserDto, UserResponseDto, UserProfileDto } from './dto/user.dto';
 import { ChangePasswordDto } from './dto/password.dto';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/constants';

@@ -1,6 +1,6 @@
 import { IsString, IsOptional, IsEnum, IsDateString, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { TodoStatus } from '../todo.model';
+import { TodoStatus } from '../../database/models/todo.model';
 
 export class CreateTodoDto {
   @ApiProperty({ example: 'Complete project documentation', description: 'Todo title' })

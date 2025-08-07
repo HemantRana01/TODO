@@ -1,7 +1,7 @@
 import { IsOptional, IsEnum, IsDateString, IsInt, Min, Max } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { TodoStatus } from '../todo.model';
+import { TodoStatus } from '../../database/models/todo.model';
 
 export class TodoQueryDto {
   @ApiPropertyOptional({ 
