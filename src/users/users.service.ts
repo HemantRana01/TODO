@@ -34,8 +34,8 @@ export class UsersService {
       id: user.id,
       username: user.username,
       email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       is_active: user.is_active,
       todo_count: user.todos?.length || 0,
     };
@@ -63,11 +63,11 @@ export class UsersService {
       id: updatedUser.id,
       username: updatedUser.username,
       email: updatedUser.email,
-      first_name: updatedUser.first_name,
-      last_name: updatedUser.last_name,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
       is_active: updatedUser.is_active,
-      created_at: updatedUser.created_at,
-      updated_at: updatedUser.updated_at,
+      createdAt: updatedUser.createdAt,
+      updatedAt: updatedUser.updatedAt,
     };
   }
 
@@ -144,8 +144,8 @@ export class UsersService {
       completed_todos: todos.filter(todo => todo.status === 'completed').length,
       pending_todos: todos.filter(todo => todo.status === 'pending').length,
       overdue_todos: todos.filter(todo => 
-        todo.due_date && 
-        new Date(todo.due_date) < today && 
+        todo.dueDate && 
+        new Date(todo.dueDate) < today && 
         todo.status !== 'completed'
       ).length,
     };

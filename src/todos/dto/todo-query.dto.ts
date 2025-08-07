@@ -19,7 +19,7 @@ export class TodoQueryDto {
   })
   @IsOptional()
   @IsDateString()
-  due_date_from?: string;
+  dueDateFrom?: string;
 
   @ApiPropertyOptional({ 
     example: '2024-12-31', 
@@ -27,7 +27,7 @@ export class TodoQueryDto {
   })
   @IsOptional()
   @IsDateString()
-  due_date_to?: string;
+  dueDateTo?: string;
 
   @ApiPropertyOptional({ 
     example: 1, 
@@ -55,12 +55,12 @@ export class TodoQueryDto {
   limit?: number = 10;
 
   @ApiPropertyOptional({ 
-    example: 'created_at', 
-    description: 'Sort by field (created_at, updated_at, due_date, title)',
-    default: 'created_at'
+    example: 'createdAt', 
+    description: 'Sort by field (createdAt, updatedAt, dueDate, title)',
+    default: 'createdAt'
   })
   @IsOptional()
-  sort_by?: 'created_at' | 'updated_at' | 'due_date' | 'title' = 'created_at';
+  sortBy?: 'createdAt' | 'updatedAt' | 'dueDate' | 'title' = 'createdAt';
 
   @ApiPropertyOptional({ 
     example: 'desc', 
@@ -68,7 +68,7 @@ export class TodoQueryDto {
     default: 'desc'
   })
   @IsOptional()
-  sort_order?: 'asc' | 'desc' = 'desc';
+  sortOrder?: 'asc' | 'desc' = 'desc';
 }
 
 export class PaginatedTodoResponseDto {
@@ -82,13 +82,13 @@ export class PaginatedTodoResponseDto {
   total: number;
 
   @ApiPropertyOptional({ example: 3, description: 'Total number of pages' })
-  total_pages: number;
+  totalPages: number;
 
   @ApiPropertyOptional({ example: true, description: 'Whether there is a next page' })
-  has_next: boolean;
+  hasNext: boolean;
 
   @ApiPropertyOptional({ example: false, description: 'Whether there is a previous page' })
-  has_prev: boolean;
+  hasPrev: boolean;
 
   @ApiPropertyOptional({ type: [Object], description: 'Array of todos' })
   data: any[];

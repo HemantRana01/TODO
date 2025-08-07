@@ -6,8 +6,8 @@ export class User extends BaseModel {
   username!: string;
   hashed_password!: string;
   email!: string;
-  first_name?: string;
-  last_name?: string;
+  firstName?: string;
+  lastName?: string;
   is_active!: boolean;
 
   // Relationships
@@ -27,11 +27,11 @@ export class User extends BaseModel {
         username: { type: 'string', minLength: 1, maxLength: 255 },
         hashed_password: { type: 'string', minLength: 1 },
         email: { type: 'string', format: 'email' },
-        first_name: { type: ['string', 'null'], maxLength: 255 },
-        last_name: { type: ['string', 'null'], maxLength: 255 },
+        firstName: { type: ['string', 'null'], maxLength: 255 },
+        lastName: { type: ['string', 'null'], maxLength: 255 },
         is_active: { type: 'boolean' },
-        created_at: { type: 'string', format: 'date-time' },
-        updated_at: { type: 'string', format: 'date-time' },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' },
       },
     };
   }
@@ -43,7 +43,7 @@ export class User extends BaseModel {
         modelClass: Todo,
         join: {
           from: 'users.id',
-          to: 'todos.user_id',
+          to: 'todos.userId',
         },
       },
     };

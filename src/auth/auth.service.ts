@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
-    const { username, email, password, first_name, last_name } = registerDto;
+    const { username, email, password, firstName, lastName } = registerDto;
 
     // Check if user already exists
     const existingUser = await User.query()
@@ -33,8 +33,8 @@ export class AuthService {
       username,
       email,
       hashed_password: hashedPassword,
-      first_name,
-      last_name,
+      firstName: firstName, 
+      lastName: lastName,
       is_active: true,
     });
 
@@ -47,8 +47,8 @@ export class AuthService {
         id: user.id,
         username: user.username,
         email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
     };
   }
@@ -79,8 +79,8 @@ export class AuthService {
         id: user.id,
         username: user.username,
         email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
     };
   }

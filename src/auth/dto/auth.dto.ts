@@ -19,12 +19,12 @@ export class RegisterDto {
   @ApiProperty({ example: 'John', description: 'First name', required: false })
   @IsOptional()
   @IsString()
-  first_name?: string;
+  firstName?: string;
 
   @ApiProperty({ example: 'Doe', description: 'Last name', required: false })
   @IsOptional()
   @IsString()
-  last_name?: string;
+  lastName?: string;
 }
 
 export class LoginDto {
@@ -46,7 +46,7 @@ export class AuthResponseDto {
     id: number;
     username: string;
     email: string;
-    first_name?: string;
-    last_name?: string;
+    firstName?: string;
+    lastName?: string;
   };
 } 

@@ -9,9 +9,10 @@ export class TodosService {
     const todo = await Todo.query().insert({
       title: createTodoDto.title,
       description: createTodoDto.description,
-      due_date: createTodoDto.due_date ? new Date(createTodoDto.due_date) : undefined,
-      user_id: userId,
+      dueDate: createTodoDto.dueDate ? new Date(createTodoDto.dueDate) : undefined,
+      userId: userId,
       status: createTodoDto.status || TodoStatus.PENDING,
+      
     });
 
     return todo;
@@ -19,23 +20,23 @@ export class TodosService {
 
   async findAll(userId: number): Promise<Todo[]> {
     return Todo.query()
-      .where('user_id', userId)
-      .orderBy('created_at', 'desc');
+      .where('userId', userId)
+      .orderBy('createdAt', 'desc');
   }
 
   async findAllPaginated(userId: number, queryDto: TodoQueryDto): Promise<PaginatedTodoResponseDto> {
     const { 
       status, 
-      due_date_from, 
-      due_date_to, 
+      dueDateFrom, 
+      dueDateTo, 
       page = 1, 
       limit = 10, 
-      sort_by = 'created_at', 
-      sort_order = 'desc' 
+      sortBy = 'createdAt', 
+      sortOrder = 'desc' 
     } = queryDto;
 
     // Build query
-    let query = Todo.query().where('user_id', userId);
+    let query = Todo.query().where('userId', userId);
 
     // Apply status filter
     if (status) {
@@ -43,12 +44,12 @@ export class TodosService {
     }
 
     // Apply due date range filters
-    if (due_date_from) {
-      query = query.where('due_date', '>=', due_date_from);
+    if (dueDateFrom) {
+      query = query.where('dueDate', '>=', dueDateFrom);
     }
 
-    if (due_date_to) {
-      query = query.where('due_date', '<=', due_date_to);
+    if (dueDateTo) {
+      query = query.where('dueDate', '<=', dueDateTo);
     }
 
     // Get total count for pagination
@@ -57,21 +58,21 @@ export class TodosService {
     // Apply pagination and sorting
     const offset = (page - 1) * limit;
     const todos = await query
-      .orderBy(sort_by, sort_order)
+      .orderBy(sortBy, sortOrder)
       .offset(offset)
       .limit(limit);
 
-    const total_pages = Math.ceil(total / limit);
-    const has_next = page < total_pages;
-    const has_prev = page > 1;
+    const totalPages = Math.ceil(total / limit);
+    const hasNext = page < totalPages;
+    const hasPrev = page > 1;
 
     return {
       page,
       limit,
       total,
-      total_pages,
-      has_next,
-      has_prev,
+      totalPages,
+      hasNext,
+      hasPrev,
       data: todos,
     };
   }
@@ -79,7 +80,7 @@ export class TodosService {
   async findOne(id: number, userId: number): Promise<Todo> {
     const todo = await Todo.query()
       .where('id', id)
-      .where('user_id', userId)
+      .where('userId', userId)
       .first();
 
     if (!todo) {
@@ -94,7 +95,7 @@ export class TodosService {
 
     const updateData = {
       ...updateTodoDto,
-      due_date: updateTodoDto.due_date ? new Date(updateTodoDto.due_date) : undefined,
+      dueDate: updateTodoDto.dueDate ? new Date(updateTodoDto.dueDate) : undefined,
     };
 
     const updatedTodo = await Todo.query()
@@ -111,9 +112,9 @@ export class TodosService {
 
   async findByStatus(status: TodoStatus, userId: number): Promise<Todo[]> {
     return Todo.query()
-      .where('user_id', userId)
+      .where('userId', userId)
       .where('status', status)
-      .orderBy('created_at', 'desc');
+      .orderBy('createdAt', 'desc');
   }
 
   async findOverdue(userId: number): Promise<Todo[]> {
@@ -121,10 +122,10 @@ export class TodosService {
     today.setHours(0, 0, 0, 0);
 
     return Todo.query()
-      .where('user_id', userId)
-      .where('due_date', '<', today)
+      .where('userId', userId)
+      .where('dueDate', '<', today)
       .whereNot('status', TodoStatus.COMPLETED)
-      .orderBy('due_date', 'asc');
+      .orderBy('dueDate', 'asc');
   }
 
   async toggleStatus(id: number, userId: number): Promise<Todo> {
@@ -135,4 +136,5 @@ export class TodosService {
     const newStatus = todo.status === TodoStatus.COMPLETED ? TodoStatus.PENDING : TodoStatus.COMPLETED;
     return Todo.query().patchAndFetchById(id, { status: newStatus });
   }
+  
 } 

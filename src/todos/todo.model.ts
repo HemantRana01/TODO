@@ -13,8 +13,8 @@ export class Todo extends BaseModel {
   title!: string;
   description?: string;
   status!: TodoStatus;
-  due_date?: Date;
-  user_id!: number;
+  dueDate?: Date;
+  userId!: number;
 
   // Relationships
   user?: User;
@@ -26,7 +26,7 @@ export class Todo extends BaseModel {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['title', 'status', 'user_id'],
+      required: ['title', 'status', 'userId'],
 
       properties: {
         id: { type: 'integer' },
@@ -37,10 +37,10 @@ export class Todo extends BaseModel {
           enum: Object.values(TodoStatus),
           default: TodoStatus.PENDING 
         },
-        due_date: { type: ['string', 'object', 'null'], format: 'date' },
-        user_id: { type: 'integer' },
-        created_at: { type: 'string', format: 'date-time' },
-        updated_at: { type: 'string', format: 'date-time' },
+        dueDate: { type: ['string', 'object', 'null'], format: 'date' },
+        userId: { type: 'integer' },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' },
       },
     };
   }
@@ -51,7 +51,7 @@ export class Todo extends BaseModel {
         relation: Model.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: 'todos.user_id',
+          from: 'todos.userId',
           to: 'users.id',
         },
       },
