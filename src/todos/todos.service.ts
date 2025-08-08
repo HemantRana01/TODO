@@ -7,11 +7,12 @@ import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/constants';
 
 @Injectable()
 export class TodosService {
-  async create(createTodoDto: CreateTodoDto) {
+  async create(createTodoDto: CreateTodoDto , userId: number) {
     const todo = await Todo.query().insert({
       title: createTodoDto.title,
       description: createTodoDto.description,
       dueDate: createTodoDto.dueDate ? new Date(createTodoDto.dueDate) : undefined,
+      userId: userId,
       status: createTodoDto.status || TodoStatus.PENDING,
     });
     return {
