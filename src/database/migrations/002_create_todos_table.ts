@@ -6,8 +6,8 @@ export async function up(knex: Knex): Promise<void> {
     table.string('title').notNullable();
     table.text('description');
     table.enum('status', ['pending', 'in_progress', 'completed', 'cancelled']).defaultTo('pending')
-    table.date('dueDate');
-    table.integer('userId').unsigned().references('id').inTable('users').onDelete('CASCADE').notNullable();
+    table.date('due_date');
+    table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE').notNullable();
     table.timestamps(true, true);
   });
 }
