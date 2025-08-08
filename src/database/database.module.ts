@@ -22,6 +22,15 @@ const databaseProvider = {
       ...knexSnakeCaseMappers()
     });
 
+    try {
+      // Try a simple query to verify connection
+      await knexInstance.raw('select 1');
+      console.log('✅ Database connected successfully');
+    } catch (error) {
+      console.error('❌ Failed to connect to the database', error);
+      throw error;
+    }
+
     // Bind Objection.js to the Knex instance
     Model.knex(knexInstance);
 
