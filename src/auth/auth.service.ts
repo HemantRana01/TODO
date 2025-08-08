@@ -2,8 +2,9 @@ import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/co
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import { User } from '../users/user.model';
+import { User } from '../database/models/user.model';
 import { RegisterDto, LoginDto, AuthResponseDto } from './dto/auth.dto';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/constants';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
-    const { username, email, password, first_name, last_name } = registerDto;
+    const { username, email, password, firstName, lastName } = registerDto;
 
     // Check if user already exists
     const existingUser = await User.query()
@@ -22,7 +23,7 @@ export class AuthService {
       .first();
 
     if (existingUser) {
-      throw new ConflictException('Username or email already exists');
+      throw new ConflictException(ERROR_MESSAGES.ACCOUNT_ALREADY_EXISTS);
     }
 
     // Hash password
@@ -32,24 +33,25 @@ export class AuthService {
     const user = await User.query().insert({
       username,
       email,
-      hashed_password: hashedPassword,
-      first_name,
-      last_name,
-      is_active: true,
+      hashedPassword: hashedPassword,
+      firstName: firstName, 
+      lastName: lastName,
+      isActive: true,
     });
 
     // Generate JWT token
-    const access_token = this.generateToken(user);
+    const accessToken = this.generateToken(user);
 
     return {
-      access_token,
+      accessToken,
       user: {
         id: user.id,
         username: user.username,
         email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
+      message: SUCCESS_MESSAGES.REGISTRATION_COMPLETED,
     };
   }
 
@@ -59,29 +61,30 @@ export class AuthService {
     // Find user by username
     const user = await User.query().where('username', username).first();
 
-    if (!user || !user.is_active) {
-      throw new UnauthorizedException('Invalid credentials');
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException(ERROR_MESSAGES.INVALID_CREDENTIALS);
     }
 
     // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.hashed_password);
+    const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(ERROR_MESSAGES.INVALID_CREDENTIALS);
     }
 
     // Generate JWT token
-    const access_token = this.generateToken(user);
+    const accessToken = this.generateToken(user);
 
     return {
-      access_token,
+      accessToken,
       user: {
         id: user.id,
         username: user.username,
         email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
+      message: SUCCESS_MESSAGES.LOGIN_SUCCESSFUL,
     };
   }
 

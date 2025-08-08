@@ -1,6 +1,6 @@
 import { IsString, IsOptional, IsEnum, IsDateString, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { TodoStatus } from '../todo.model';
+import { TodoStatus } from '../../database/models/todo.model';
 
 export class CreateTodoDto {
   @ApiProperty({ example: 'Complete project documentation', description: 'Todo title' })
@@ -20,7 +20,7 @@ export class CreateTodoDto {
   @ApiProperty({ example: '2024-12-31', description: 'Due date', required: false })
   @IsOptional()
   @IsDateString()
-  due_date?: string;
+  dueDate?: string;
 }
 
 export class UpdateTodoDto {
@@ -42,7 +42,7 @@ export class UpdateTodoDto {
   @ApiProperty({ example: '2024-12-31', description: 'Due date', required: false })
   @IsOptional()
   @IsDateString()
-  due_date?: string;
+  dueDate?: string;
 }
 
 export class TodoResponseDto {
@@ -59,14 +59,16 @@ export class TodoResponseDto {
   status: TodoStatus;
 
   @ApiProperty({ example: '2024-12-31', description: 'Due date' })
-  due_date?: Date;
+  dueDate?: Date;
 
   @ApiProperty({ example: 1, description: 'User ID' })
-  user_id: number;
+  userId: number;
 
   @ApiProperty({ example: '2024-01-01T00:00:00Z', description: 'Created at timestamp' })
-  created_at: Date;
+  @IsOptional()
+  createdAt: Date;
 
   @ApiProperty({ example: '2024-01-01T00:00:00Z', description: 'Updated at timestamp' })
-  updated_at: Date;
+  @IsOptional()
+  updatedAt: Date;
 } 

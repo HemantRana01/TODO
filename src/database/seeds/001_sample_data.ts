@@ -12,19 +12,35 @@ export async function seed(knex: Knex): Promise<void> {
   const users = await knex('users').insert([
     {
       username: 'john_doe',
-      hashed_password: hashedPassword,
+      hashedPassword: hashedPassword,
       email: 'john@example.com',
-      first_name: 'John',
-      last_name: 'Doe',
-      is_active: true,
+      firstName: 'John',
+      lastName: 'Doe',
+      isActive: true,
     },
     {
       username: 'jane_smith',
-      hashed_password: hashedPassword,
+      hashedPassword: hashedPassword,
       email: 'jane@example.com',
-      first_name: 'Jane',
-      last_name: 'Smith',
-      is_active: true,
+      firstName: 'Jane',
+      lastName: 'Smith',
+      isActive: true,
+    },
+    {
+      username: 'john_musk',
+      hashedPassword: hashedPassword,
+      email: 'musk@example.com',
+      firstName: 'John',
+      lastName: 'Musk',
+      isActive: true,
+    },
+    {
+      username: 'ted_mostby',
+      hashedPassword: hashedPassword,
+      email: 'ted@example.com',
+      firstName: 'ted',
+      lastName: 'Mostby',
+      isActive: true,
     },
   ]).returning('*');
 
@@ -34,29 +50,57 @@ export async function seed(knex: Knex): Promise<void> {
       title: 'Complete project documentation',
       description: 'Write comprehensive documentation for the todo API',
       status: 'pending',
-      due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-      user_id: users[0].id,
+      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+      userId: users[0].id,
     },
     {
       title: 'Review code changes',
       description: 'Review pull requests and provide feedback',
       status: 'in_progress',
-      due_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
-      user_id: users[0].id,
+      dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+      userId: users[0].id,
     },
     {
       title: 'Setup database migrations',
       description: 'Create and test database migration scripts',
       status: 'completed',
-      due_date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-      user_id: users[1].id,
+      dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+      userId: users[1].id,
     },
     {
       title: 'Plan next sprint',
       description: 'Organize tasks and priorities for the upcoming sprint',
       status: 'pending',
-      due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
-      user_id: users[1].id,
+      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
+      userId: users[1].id,
+    },
+    {
+      title: 'Complete project documentation',
+      description: 'Write comprehensive documentation for the todo API',
+      status: 'pending',
+      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+      userId: users[0].id,
+    },
+    {
+      title: 'Review code changes',
+      description: 'Review pull requests and provide feedback',
+      status: 'in_progress',
+      dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+      userId: users[0].id,
+    },
+    {
+      title: 'Setup database migrations',
+      description: 'Create and test database migration scripts',
+      status: 'completed',
+      dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+      userId: users[1].id,
+    },
+    {
+      title: 'Plan next sprint',
+      description: 'Organize tasks and priorities for the upcoming sprint',
+      status: 'pending',
+      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
+      userId: users[1].id,
     },
   ]);
 } 

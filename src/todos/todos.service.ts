@@ -1,41 +1,44 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { Todo, TodoStatus } from './todo.model';
+import { Todo, TodoStatus } from '../database/models/todo.model';
 import { CreateTodoDto, UpdateTodoDto } from './dto/todo.dto';
 import { TodoQueryDto, PaginatedTodoResponseDto } from './dto/todo-query.dto';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/constants';
+
 
 @Injectable()
 export class TodosService {
-  async create(createTodoDto: CreateTodoDto, userId: number): Promise<Todo> {
+  async create(createTodoDto: CreateTodoDto) {
     const todo = await Todo.query().insert({
       title: createTodoDto.title,
       description: createTodoDto.description,
-      due_date: createTodoDto.due_date ? new Date(createTodoDto.due_date) : undefined,
-      user_id: userId,
+      dueDate: createTodoDto.dueDate ? new Date(createTodoDto.dueDate) : undefined,
       status: createTodoDto.status || TodoStatus.PENDING,
     });
-
-    return todo;
+    return {
+      message: SUCCESS_MESSAGES.USER_CREATED_SUCCESSFULLY,
+      data: todo,
+    };
   }
 
   async findAll(userId: number): Promise<Todo[]> {
     return Todo.query()
-      .where('user_id', userId)
-      .orderBy('created_at', 'desc');
+      .where('userId', userId)
+      .orderBy('createdAt', 'desc');
   }
 
   async findAllPaginated(userId: number, queryDto: TodoQueryDto): Promise<PaginatedTodoResponseDto> {
-    const { 
-      status, 
-      due_date_from, 
-      due_date_to, 
-      page = 1, 
-      limit = 10, 
-      sort_by = 'created_at', 
-      sort_order = 'desc' 
+    const {
+      status,
+      dueDateFrom,
+      dueDateTo,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
     } = queryDto;
 
     // Build query
-    let query = Todo.query().where('user_id', userId);
+    let query = Todo.query().where('userId', userId);
 
     // Apply status filter
     if (status) {
@@ -43,12 +46,12 @@ export class TodosService {
     }
 
     // Apply due date range filters
-    if (due_date_from) {
-      query = query.where('due_date', '>=', due_date_from);
+    if (dueDateFrom) {
+      query = query.where('dueDate', '>=', dueDateFrom);
     }
 
-    if (due_date_to) {
-      query = query.where('due_date', '<=', due_date_to);
+    if (dueDateTo) {
+      query = query.where('dueDate', '<=', dueDateTo);
     }
 
     // Get total count for pagination
@@ -57,21 +60,21 @@ export class TodosService {
     // Apply pagination and sorting
     const offset = (page - 1) * limit;
     const todos = await query
-      .orderBy(sort_by, sort_order)
+      .orderBy(sortBy, sortOrder)
       .offset(offset)
       .limit(limit);
 
-    const total_pages = Math.ceil(total / limit);
-    const has_next = page < total_pages;
-    const has_prev = page > 1;
+    const totalPages = Math.ceil(total / limit);
+    const hasNext = page < totalPages;
+    const hasPrev = page > 1;
 
     return {
       page,
       limit,
       total,
-      total_pages,
-      has_next,
-      has_prev,
+      totalPages,
+      hasNext,
+      hasPrev,
       data: todos,
     };
   }
@@ -79,41 +82,44 @@ export class TodosService {
   async findOne(id: number, userId: number): Promise<Todo> {
     const todo = await Todo.query()
       .where('id', id)
-      .where('user_id', userId)
+      .where('userId', userId)
       .first();
 
     if (!todo) {
-      throw new NotFoundException('Todo not found');
+      throw new NotFoundException(ERROR_MESSAGES.TODO_NOT_FOUND);
     }
 
     return todo;
   }
 
-  async update(id: number, updateTodoDto: UpdateTodoDto, userId: number): Promise<Todo> {
+  async update(id: number, updateTodoDto: UpdateTodoDto, userId: number) {
     const todo = await this.findOne(id, userId);
 
     const updateData = {
       ...updateTodoDto,
-      due_date: updateTodoDto.due_date ? new Date(updateTodoDto.due_date) : undefined,
+      dueDate: updateTodoDto.dueDate ? new Date(updateTodoDto.dueDate) : undefined,
     };
 
     const updatedTodo = await Todo.query()
       .patchAndFetchById(id, updateData);
 
-    return updatedTodo;
+    return {
+      data: updatedTodo,
+      message: SUCCESS_MESSAGES.USER_UPDATED_SUCCESSFULLY,
+    };
   }
 
   async remove(id: number, userId: number): Promise<void> {
     const todo = await this.findOne(id, userId);
-    
+
     await Todo.query().deleteById(id);
   }
 
   async findByStatus(status: TodoStatus, userId: number): Promise<Todo[]> {
     return Todo.query()
-      .where('user_id', userId)
+      .where('userId', userId)
       .where('status', status)
-      .orderBy('created_at', 'desc');
+      .orderBy('createdAt', 'desc');
   }
 
   async findOverdue(userId: number): Promise<Todo[]> {
@@ -121,18 +127,19 @@ export class TodosService {
     today.setHours(0, 0, 0, 0);
 
     return Todo.query()
-      .where('user_id', userId)
-      .where('due_date', '<', today)
+      .where('userId', userId)
+      .where('dueDate', '<', today)
       .whereNot('status', TodoStatus.COMPLETED)
-      .orderBy('due_date', 'asc');
+      .orderBy('dueDate', 'asc');
   }
 
   async toggleStatus(id: number, userId: number): Promise<Todo> {
     const todo = await this.findOne(id, userId);
     if (!todo) {
-      throw new NotFoundException('Todo not found');
+      throw new NotFoundException(ERROR_MESSAGES.TODO_NOT_FOUND);
     }
     const newStatus = todo.status === TodoStatus.COMPLETED ? TodoStatus.PENDING : TodoStatus.COMPLETED;
     return Todo.query().patchAndFetchById(id, { status: newStatus });
   }
+
 } 

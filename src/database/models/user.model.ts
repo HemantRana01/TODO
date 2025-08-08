@@ -1,14 +1,14 @@
 import { Model } from 'objection';
-import { BaseModel } from '../database/base.model';
-import { Todo } from '../todos/todo.model';
+import { Todo } from './todo.model';
+import { BaseModel } from './base.model';
 
 export class User extends BaseModel {
   username!: string;
-  hashed_password!: string;
+  hashedPassword!: string;
   email!: string;
-  first_name?: string;
-  last_name?: string;
-  is_active!: boolean;
+  firstName?: string;
+  lastName?: string;
+  isActive!: boolean;
 
   // Relationships
   todos?: Todo[];
@@ -20,18 +20,18 @@ export class User extends BaseModel {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['username', 'hashed_password', 'email'],
+      required: ['username', 'hashedPassword', 'email'],
 
       properties: {
         id: { type: 'integer' },
         username: { type: 'string', minLength: 1, maxLength: 255 },
-        hashed_password: { type: 'string', minLength: 1 },
+        hashedPassword: { type: 'string', minLength: 1 },
         email: { type: 'string', format: 'email' },
-        first_name: { type: ['string', 'null'], maxLength: 255 },
-        last_name: { type: ['string', 'null'], maxLength: 255 },
-        is_active: { type: 'boolean' },
-        created_at: { type: 'string', format: 'date-time' },
-        updated_at: { type: 'string', format: 'date-time' },
+        firstName: { type: ['string', 'null'], maxLength: 255 },
+        lastName: { type: ['string', 'null'], maxLength: 255 },
+        isActive: { type: 'boolean' },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' },
       },
     };
   }
@@ -43,7 +43,7 @@ export class User extends BaseModel {
         modelClass: Todo,
         join: {
           from: 'users.id',
-          to: 'todos.user_id',
+          to: 'todos.userId',
         },
       },
     };

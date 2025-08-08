@@ -10,17 +10,17 @@ export class UpdateUserDto {
   @ApiProperty({ example: 'John', description: 'First name', required: false })
   @IsOptional()
   @IsString()
-  first_name?: string;
+  firstName?: string;
 
   @ApiProperty({ example: 'Doe', description: 'Last name', required: false })
   @IsOptional()
   @IsString()
-  last_name?: string;
+  lastName?: string;
 
   @ApiProperty({ example: true, description: 'User active status', required: false })
   @IsOptional()
   @IsBoolean()
-  is_active?: boolean;
+  isActive?: boolean;
 }
 
 export class UserResponseDto {
@@ -34,19 +34,19 @@ export class UserResponseDto {
   email: string;
 
   @ApiProperty({ example: 'John', description: 'First name' })
-  first_name?: string;
+  firstName?: string;
 
   @ApiProperty({ example: 'Doe', description: 'Last name' })
-  last_name?: string;
+  lastName?: string;
 
   @ApiProperty({ example: true, description: 'User active status' })
-  is_active: boolean;
+  isActive: boolean;
 
   @ApiProperty({ example: '2024-01-01T00:00:00Z', description: 'Created at timestamp' })
-  created_at: Date;
+  createdAt: Date;
 
   @ApiProperty({ example: '2024-01-01T00:00:00Z', description: 'Updated at timestamp' })
-  updated_at: Date;
+  updatedAt: Date;
 }
 
 export class UserProfileDto {
@@ -60,14 +60,14 @@ export class UserProfileDto {
   email: string;
 
   @ApiProperty({ example: 'John', description: 'First name' })
-  first_name?: string;
+  firstName?: string;
 
   @ApiProperty({ example: 'Doe', description: 'Last name' })
-  last_name?: string;
+  lastName?: string;
 
   @ApiProperty({ example: true, description: 'User active status' })
-  is_active: boolean;
+  isActive: boolean;
 
   @ApiProperty({ example: 5, description: 'Number of todos' })
-  todo_count: number;
+  todoCount: number;
 } 

@@ -2,16 +2,16 @@ import { Model } from 'objection';
 
 export class BaseModel extends Model {
   id!: number;
-  created_at!: Date;
-  updated_at!: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 
   $beforeInsert() {
-    this.created_at = new Date();
-    this.updated_at = new Date();
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
   }
 
   $beforeUpdate() {
-    this.updated_at = new Date();
+    this.updatedAt = new Date();
   }
 
   static get modelPaths() {

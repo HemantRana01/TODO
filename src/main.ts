@@ -16,9 +16,9 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
-    transform: true,
+    transform: false,
   }));
-
+  const port = configService.get('PORT', 3000);
   // Swagger documentation setup
   const config = new DocumentBuilder()
     .setTitle(configService.get('SWAGGER_TITLE', 'Todo API'))
@@ -38,7 +38,7 @@ async function bootstrap() {
       },
       'JWT-auth', // This name here is important for references
     )
-    .addServer('http://localhost:3000', 'Development server')
+    .addServer(configService.get('SERVER_URL', `http://localhost:${port}`), 'Development server')
     .build();
   
   const document = SwaggerModule.createDocument(app, config);
@@ -52,7 +52,6 @@ async function bootstrap() {
     customSiteTitle: 'Todo API Documentation',
   });
 
-  const port = configService.get('PORT', 3000);
   await app.listen(port);
   
   console.log(`🚀 Application is running on: http://localhost:${port}`);

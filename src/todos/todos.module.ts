@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { Todo } from './todo.model';
+import { Todo } from '../database/models/todo.model';
 import { TodosController } from './todos.controller';
 import { TodosService } from './todos.service';
 

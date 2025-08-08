@@ -1,7 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import knex from 'knex';
-import { Model } from 'objection';
+import { Model,knexSnakeCaseMappers  } from 'objection';
 
 const databaseProvider = {
   provide: 'DATABASE_CONNECTION',
@@ -19,6 +19,7 @@ const databaseProvider = {
         min: 2,
         max: 10,
       },
+      ...knexSnakeCaseMappers()
     });
 
     // Bind Objection.js to the Knex instance

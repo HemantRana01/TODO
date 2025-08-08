@@ -81,7 +81,7 @@ export class UsersController {
   async updateProfile(
     @CurrentUser() user: JwtUser,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserResponseDto> {
+  ){
     return this.usersService.updateProfile(user.id, updateUserDto);
   }
 
@@ -96,22 +96,22 @@ export class UsersController {
     schema: {
       type: 'object',
       properties: {
-        total_todos: { 
+        totalTodos: { 
           type: 'number', 
           example: 10, 
           description: 'Total number of todos' 
         },
-        completed_todos: { 
+        completedTodos: { 
           type: 'number', 
           example: 5, 
           description: 'Number of completed todos' 
         },
-        pending_todos: { 
+        pendingTodos: { 
           type: 'number', 
           example: 3, 
           description: 'Number of pending todos' 
         },
-        overdue_todos: { 
+        overdueTodos: { 
           type: 'number', 
           example: 2, 
           description: 'Number of overdue todos' 

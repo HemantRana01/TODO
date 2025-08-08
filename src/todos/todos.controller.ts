@@ -16,7 +16,7 @@ import { CurrentUser } from '../auth/decorators/user.decorator';
 import { TodosService } from './todos.service';
 import { CreateTodoDto, UpdateTodoDto, TodoResponseDto } from './dto/todo.dto';
 import { TodoQueryDto, PaginatedTodoResponseDto } from './dto/todo-query.dto';
-import { TodoStatus } from './todo.model';
+import { TodoStatus } from '../database/models/todo.model';
 
 interface JwtUser {
   id: number;
@@ -53,8 +53,8 @@ export class TodosController {
     status: 401, 
     description: 'Unauthorized - Invalid or missing JWT token' 
   })
-  async create(@Body() createTodoDto: CreateTodoDto, @CurrentUser() user: JwtUser): Promise<TodoResponseDto> {
-    const todo = await this.todosService.create(createTodoDto, user.id);
+  async create(@Body() createTodoDto: CreateTodoDto ){
+    const todo = await this.todosService.create(createTodoDto);
     return todo;
   }
 
@@ -64,12 +64,12 @@ export class TodosController {
     description: 'Retrieve paginated list of todos for the authenticated user with advanced filtering options including status, due date range, and sorting.'
   })
   @ApiQuery({ name: 'status', required: false, enum: TodoStatus, description: 'Filter by todo status' })
-  @ApiQuery({ name: 'due_date_from', required: false, type: String, description: 'Filter todos due from this date (YYYY-MM-DD)' })
-  @ApiQuery({ name: 'due_date_to', required: false, type: String, description: 'Filter todos due until this date (YYYY-MM-DD)' })
+  @ApiQuery({ name: 'dueDateFrom', required: false, type: String, description: 'Filter todos due from this date (YYYY-MM-DD)' })
+  @ApiQuery({ name: 'dueDateTo', required: false, type: String, description: 'Filter todos due until this date (YYYY-MM-DD)' })
   @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (default: 1)' })
   @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page (default: 10, max: 100)' })
-  @ApiQuery({ name: 'sort_by', required: false, enum: ['created_at', 'updated_at', 'due_date', 'title'], description: 'Sort field (default: created_at)' })
-  @ApiQuery({ name: 'sort_order', required: false, enum: ['asc', 'desc'], description: 'Sort order (default: desc)' })
+  @ApiQuery({ name: 'sortBy', required: false, enum: ['createdAt', 'updatedAt', 'dueDate', 'title'], description: 'Sort field (default: createdAt)' })
+  @ApiQuery({ name: 'sortOrder', required: false, enum: ['asc', 'desc'], description: 'Sort order (default: desc)' })
   @ApiResponse({ 
     status: 200, 
     description: 'Paginated list of todos retrieved successfully with metadata.',
@@ -203,7 +203,7 @@ export class TodosController {
     @Param('id') id: string,
     @Body() updateTodoDto: UpdateTodoDto,
     @CurrentUser() user: JwtUser,
-  ): Promise<TodoResponseDto> {
+  ){
     return this.todosService.update(+id, updateTodoDto, user.id);
   }
 

@@ -19,12 +19,12 @@ export class RegisterDto {
   @ApiProperty({ example: 'John', description: 'First name', required: false })
   @IsOptional()
   @IsString()
-  first_name?: string;
+  firstName?: string;
 
   @ApiProperty({ example: 'Doe', description: 'Last name', required: false })
   @IsOptional()
   @IsString()
-  last_name?: string;
+  lastName?: string;
 }
 
 export class LoginDto {
@@ -39,14 +39,17 @@ export class LoginDto {
 
 export class AuthResponseDto {
   @ApiProperty({ description: 'JWT access token' })
-  access_token: string;
+  accessToken: string;
 
   @ApiProperty({ description: 'User information' })
   user: {
     id: number;
     username: string;
     email: string;
-    first_name?: string;
-    last_name?: string;
+    firstName?: string;
+    lastName?: string;
   };
+
+  @ApiProperty({ description: 'Register Successfully', example: 3600 })
+  message: string;
 } 
