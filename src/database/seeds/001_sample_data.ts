@@ -12,35 +12,35 @@ export async function seed(knex: Knex): Promise<void> {
   const users = await knex('users').insert([
     {
       username: 'john_doe',
-      hashedPassword: hashedPassword,
+      hashed_password: hashedPassword,
       email: 'john@example.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      isActive: true,
+      first_name: 'John',
+      last_name: 'Doe',
+      is_active: true,
     },
     {
       username: 'jane_smith',
-      hashedPassword: hashedPassword,
+      hashed_password: hashedPassword,
       email: 'jane@example.com',
-      firstName: 'Jane',
-      lastName: 'Smith',
-      isActive: true,
+      first_name: 'Jane',
+      last_name: 'Smith',
+      is_active: true,
     },
     {
       username: 'john_musk',
-      hashedPassword: hashedPassword,
+      hashed_password: hashedPassword,
       email: 'musk@example.com',
-      firstName: 'John',
-      lastName: 'Musk',
-      isActive: true,
+      first_name: 'John',
+      last_name: 'Musk',
+      is_active: true,
     },
     {
       username: 'ted_mostby',
-      hashedPassword: hashedPassword,
+      hashed_password: hashedPassword,
       email: 'ted@example.com',
-      firstName: 'ted',
-      lastName: 'Mostby',
-      isActive: true,
+      first_name: 'ted',
+      last_name: 'Mostby',
+      is_active: true,
     },
   ]).returning('*');
 
@@ -50,57 +50,57 @@ export async function seed(knex: Knex): Promise<void> {
       title: 'Complete project documentation',
       description: 'Write comprehensive documentation for the todo API',
       status: 'pending',
-      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-      userId: users[0].id,
+      due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+      user_id: users[0].id,
     },
     {
       title: 'Review code changes',
       description: 'Review pull requests and provide feedback',
       status: 'in_progress',
-      dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
-      userId: users[0].id,
+      due_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+      user_id: users[0].id,
     },
     {
       title: 'Setup database migrations',
       description: 'Create and test database migration scripts',
       status: 'completed',
-      dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-      userId: users[1].id,
+      due_date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+      user_id: users[1].id,
     },
     {
       title: 'Plan next sprint',
       description: 'Organize tasks and priorities for the upcoming sprint',
       status: 'pending',
-      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
-      userId: users[1].id,
+      due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
+      user_id: users[1].id,
     },
     {
       title: 'Complete project documentation',
       description: 'Write comprehensive documentation for the todo API',
       status: 'pending',
-      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-      userId: users[0].id,
+      due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+      user_id: users[0].id,
     },
     {
       title: 'Review code changes',
       description: 'Review pull requests and provide feedback',
       status: 'in_progress',
-      dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
-      userId: users[0].id,
+      due_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+      user_id: users[0].id,
     },
     {
       title: 'Setup database migrations',
       description: 'Create and test database migration scripts',
       status: 'completed',
-      dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-      userId: users[1].id,
+      due_date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+      user_id: users[1].id,
     },
     {
       title: 'Plan next sprint',
       description: 'Organize tasks and priorities for the upcoming sprint',
       status: 'pending',
-      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
-      userId: users[1].id,
+      due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
+      user_id: users[1].id,
     },
   ]);
 } 
